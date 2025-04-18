@@ -4,7 +4,7 @@
 This is a generic PrestaShop module. It is designed to be compatible with PrestaShop versions 1.7 and 8.x. The module provides a basic structure for developers to extend and customize according to their needs.
 
 ## Features
-- Fully compatible with PrestaShop 1.7 and 8.x.
+- Compatible with PrestaShop 1.7 and 8.x.
 - Includes example front and admin controllers.
 - Provides a dummy class for database interactions.
 - Includes hooks for front-end and back-office integration.
