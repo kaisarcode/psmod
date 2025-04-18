@@ -1,6 +1,6 @@
 <?php
 /**
-* 2007 PrestaShop
+* 2007-2022 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,102 +18,139 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author    KaisarCode <info@kaisarcode.com>
-*  @copyright 2022 KaisarCode
-*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2022 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 */
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class PSMod extends Module
+require_once __DIR__.'/vendor/autoload.php';
+
+class PsMod extends Module
 {
-    
+
     private $hooks = array(
+        'moduleRoutes',
         'header',
-        'backOfficeHeader'
+        'displayBackOfficeHeader',
     );
-    
+
     public function __construct()
     {
         $this->name = 'psmod';
-        $this->displayName = $this->l('PS Mod');
-        $this->description = $this->l('Generic module');
         $this->tab = 'others';
         $this->version = '1.0.0';
         $this->author = 'KaisarCode';
-        
-        $this->bootstrap = 1;
-        $this->need_instance = 0;
-        $this->path = realpath(dirname(__FILE__));
-        $this->ps_version = Configuration::get('PS_VERSION_DB');
-        $this->ps_version = explode('.', $this->ps_version);
-        $this->ps_version = $this->ps_version[0].$this->ps_version[1];
-        $this->ps_versions_compliancy = array(
-            'min' => '1.7',
-            'max' => _PS_VERSION_
-        );
-        
+        $this->bootstrap = true;
+        $this->need_instance = true;
+        $this->displayName = 'PrestaShop Module';
+        $this->description = 'Generic PrestaShop module.';
+        $this->ps_versions_compliancy = array('min' => '1.7', 'max' => '8.99.99');
         parent::__construct();
     }
-    
+
+    // INSTALL TABS
+    private function installTabs()
+    {
+        $this->addTab($this->displayName);
+        $this->addTab('Configuración', 'Configuration');
+    }
+
+    // SET CONTROLLER ROUTES
+    public function hookModuleRoutes()
+    {
+        return array(
+            "module-{$this->name}-test" => array(
+                'controller' => 'test',
+                'rule' => 'psmod/test',
+                'keywords' => array(),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => $this->name
+                )
+            ),
+            "module-{$this->name}-test2" => array(
+                'controller' => 'test2',
+                'rule' => 'psmod/test2',
+                'keywords' => array(),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => $this->name
+                )
+            )
+        );
+    }
+
+    // ADD JS & CSS TO ADMIN
+    public function hookDisplayBackOfficeHeader()
+    {
+        if (Tools::getValue('configure') == $this->name) {
+            $this->context->controller->addJS($this->_path . 'views/js/back.js');
+            $this->context->controller->addCSS($this->_path . 'views/css/back.css');
+        }
+    }
+
+    // ADD JS & CSS TO FRONT
+    public function hookHeader()
+    {
+        $this->context->controller->addJS($this->_path . '/views/js/front.js');
+        $this->context->controller->addCSS($this->_path . '/views/css/front.css');
+    }
+
     // CONFIG PAGE
     public function getContent()
     {
+        $this->regHooks();
+        $this->postProcess();
+
         $data = new stdClass();
-        
-        $lnk = new Link();
-        $ssl = Tools::usingSecureMode();
-        $data->controller_service = $lnk->getModuleLink($this->name, 'service', [], Tools::usingSecureMode());
-        $data->controller_dummy = $lnk->getModuleLink($this->name, 'dummy', [], Tools::usingSecureMode());
-        
-        $this->addMediaFiles('admin/config');
+        $data->PSMOD_DUMMY_CONF = Configuration::get('PSMOD_DUMMY_CONF');
+
+        // Render template
         $this->context->smarty->assign('data', $data);
-        return $this->fetch("module:psmod/views/templates/admin/config.tpl");
+        return $this->context->smarty->fetch("{$this->local_path}views/templates/admin/config.tpl");
     }
-    
-    // BACKOFFICE HEADER
-    public function hookBackOfficeHeader()
+
+    // POSTPROCESS CONFIG
+    public function postProcess()
     {
-        $this->addMediaFiles('admin/header');
+        if (Tools::isSubmit('submit')) {
+            $val = pSQL(Tools::getValue('PSMOD_DUMMY_CONF'));
+            Configuration::updateValue('PSMOD_DUMMY_CONF', $val);
+        }
     }
-    
-    // FRONT HEADER
-    public function hookHeader()
-    {
-        $this->addMediaFiles('front/header');
-    }
-    
+
     // INSTALL MODULE
     public function install()
     {
-        parent::install();
+        $this->regHooks();
         $this->installTabs();
-        $this->registerHooks();
-        include "{$this->path}/includes/install.php";
-        return true;
+        require("{$this->local_path}sql/install.php");
+        return parent::install();
     }
-    
+
     // UNINSTALL MODULE
     public function uninstall()
     {
-        parent::uninstall();
         $this->uninstallTabs();
-        include "{$this->path}/includes/uninstall.php";
-        return true;
+        require("{$this->local_path}sql/uninstall.php");
+        Configuration::deleteByName('PSMOD_DUMMY_CONF');
+        return parent::uninstall();
     }
-    
+
     // ENABLE MODULE
     public function enable($force_all = false)
     {
         parent::enable();
+        $this->regHooks();
         $this->installTabs();
-        $this->registerHooks();
         return true;
     }
-    
+
     // DISABLE MODULE
     public function disable($force_all = false)
     {
@@ -121,66 +158,51 @@ class PSMod extends Module
         $this->uninstallTabs();
         return true;
     }
-    
+
     // REGISTER HOOKS
-    private function registerHooks()
+    private function regHooks()
     {
         foreach ($this->hooks as $hook) {
-            if (!$this->isRegisteredInHook($hook)) {
-                $this->registerHook($hook);
+            try {
+                if (!$this->isRegisteredInHook($hook)) {
+                    $this->registerHook($hook);
+                }
+            } catch (Exception $e) {
+                continue;
             }
         }
+        return true;
     }
-    
-    // INSTALL TABS
-    private function installTabs()
-    {
-        $this->addTab($this->displayName);
-        $this->addTab($this->l('Dummy'), 'Dummy');
-    }
-    
+
     // UNINSTALL TABS
     private function uninstallTabs()
     {
-        $dbx = _DB_PREFIX_;
-        $sql = "
-        SELECT id_tab FROM {$dbx}tab
-        WHERE module = '{$this->name}'";
-        $tabs = Db::getInstance()->executeS($sql);
-        foreach ($tabs as $t) {
-            $tab = new Tab($t['id_tab']);
+        $name = $this->name;
+        $tabs = Tab::getCollectionFromModule($name);
+        foreach ($tabs as $tab) {
             $tab->delete();
         }
     }
-    
+
     // ADD MENU TAB
-    public function addTab($txt, $cls = '', $ico = 'settings')
+    public function addTab($title, $class = '', $icon = 'settings', $hidden = false)
     {
         $pfx = 'Admin'.get_class($this); // class prefix
-        $pid = Tab::getIdFromClassName($pfx); // parent id
-        $tid = Tab::getIdFromClassName($pfx.$cls); // tab id
-        $lns = Language::getLanguages(false);
-        if (!$tid) {
+        $id_pnt = Tab::getIdFromClassName($pfx); // parent id
+        $id_tab = Tab::getIdFromClassName($pfx.$class); // tab id
+        $langs = Language::getLanguages(false);
+        if (!$id_tab) {
             $tab = new Tab();
-            $tab->class_name = $pfx.$cls;
+            $tab->class_name = $pfx.$class;
             $tab->module = $this->name;
             $tab->id_parent = 0;
-            $cls && $tab->id_parent = $pid;
-            $cls && $tab->icon = $ico;
-            foreach($lns as $ln){
-                $tab->name[$ln['id_lang']] = $txt;
+            $class && $tab->id_parent = $id_pnt;
+            $class && $tab->icon = $icon;
+            $hidden && $tab->id_parent = -1;
+            foreach($langs as $lang){
+                $tab->name[$lang['id_lang']] = $title;
             }
             $tab->save();
         }
-    }
-    
-    // ADD CSS AND JS TO PAGE
-    public function addMediaFiles($page, $data = [])
-    {
-        $name = $this->name;
-        $path = rtrim($this->_path, "/");
-        Media::addJsDef(array($name => $data));
-        $this->context->controller->addJS("$path/views/js/$page.js");
-        $this->context->controller->addCSS("$path/views/css/$page.css");
     }
 }

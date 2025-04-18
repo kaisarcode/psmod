@@ -24,12 +24,24 @@
 * International Registered Trademark & Property of PrestaShop SA
 */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+class PsModTest2ModuleFrontController extends ModuleFrontController
+{
+    public $display_column_left = false;
+    public $display_column_right = false;
 
-header('Location: ../');
-exit;
+    public function initContent()
+    {
+        parent::initContent();
+        $this->ajax = false;
+
+        // Set the content to be displayed
+        $this->context->smarty->assign('content', 'CONTENT');
+
+        // Render the template
+        $this->setTemplate('module:psmod/views/templates/front/test2.tpl');
+    }
+}

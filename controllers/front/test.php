@@ -24,12 +24,32 @@
 * International Registered Trademark & Property of PrestaShop SA
 */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+class PsModTestModuleFrontController extends ModuleFrontController
+{
+    public $display_column_left = false;
+    public $display_column_right = false;
+    public function initContent()
+    {
+        parent::initContent();
+        $this->ajax = true;
+    }
 
-header('Location: ../');
-exit;
+    public function displayAjax()
+    {
+        header('Content-Type: application/json');
+
+        // PREPARE OUTPUT
+        $out = new stdClass();
+        $out->status = 'OK';
+        $out->result = null;
+        $out->errors = [];
+
+        // SHOW OUTPUT
+        echo Tools::jsonEncode($out);
+    }
+
+}

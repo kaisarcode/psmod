@@ -24,12 +24,38 @@
 * International Registered Trademark & Property of PrestaShop SA
 */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+/**
+ * Example model class for a PrestaShop module
+ *
+ * This class extends ObjectModel and defines the properties and database structure
+ * for a custom module.
+ */
+class PsModExampleModelClass extends ObjectModel
+{
+    /**
+     * Example properties that would map to database fields
+     */
+    public $active;
+    public $date_add;
 
-header('Location: ../');
-exit;
+    /**
+     * Database definition
+     */
+    public static $definition = array(
+        'table' => 'psmod_example_model',
+        'primary' => 'id_psmod_example',
+        'fields' => array(
+            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate')
+        )
+    );
+
+    public function __construct($id = 0)
+    {
+        parent::__construct($id);
+    }
+}

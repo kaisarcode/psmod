@@ -24,12 +24,14 @@
 * International Registered Trademark & Property of PrestaShop SA
 */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+$dbx = _DB_PREFIX_;
+$sql = array();
+$sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'psmod_example_model`';
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
-
-header('Location: ../');
-exit;
+foreach ($sql as $q) {
+    try {
+        Db::getInstance()->execute($q);
+    } catch (Exception $e) {
+        //$msg = $e->getMessage();
+    }
+}

@@ -1,5 +1,5 @@
-{**
-* 2007 PrestaShop
+{*
+* 2007-2022 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -17,14 +17,22 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author    KaisarCode <info@kaisarcode.com>
-*  @copyright 2022 KaisarCode
-*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2022 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 
-{l s='Configuration' mod='psmod'}
-<div class="panel">
-    <div>{$data->controller_dummy}</div>
-    <div>{$data->controller_service}</div>
-</div>
+<form method="post">
+    <div class="panel">
+        <h3>Dummy</h3>
+        <div>
+            <label>Dummy</label>
+            <input type="text" class="form-control" name="PSMOD_DUMMY_CONF" value="{$data->PSMOD_DUMMY_CONF}">
+        </div>
+        <hr>
+        <div class="text-right">
+            <button type="submit" name="submit" class="btn btn-primary">Guardar</button>
+        </div>
+    </div>
+</form>
