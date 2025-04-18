@@ -37,6 +37,7 @@ class PsMod extends Module
         'moduleRoutes',
         'header',
         'displayBackOfficeHeader',
+        'actionDispatcher'
     );
 
     public function __construct()
@@ -57,32 +58,39 @@ class PsMod extends Module
     private function installTabs()
     {
         $this->addTab($this->displayName);
-        $this->addTab('Configuración', 'Configuration');
+        $this->addTab('Configuration', 'Configuration');
     }
 
     // SET CONTROLLER ROUTES
     public function hookModuleRoutes()
     {
         return array(
-            "module-{$this->name}-test" => array(
-                'controller' => 'test',
-                'rule' => 'psmod/test',
+            // Rutas de ejemplo
+            'module-psmod-example-api' => array(
+                'controller' => 'exampleApi',
+                'rule' => 'example/api',
                 'keywords' => array(),
                 'params' => array(
                     'fc' => 'module',
-                    'module' => $this->name
+                    'module' => 'psmod'
                 )
             ),
-            "module-{$this->name}-test2" => array(
-                'controller' => 'test2',
-                'rule' => 'psmod/test2',
+            'module-psmod-example-page' => array(
+                'controller' => 'examplePage',
+                'rule' => 'example/page',
                 'keywords' => array(),
                 'params' => array(
                     'fc' => 'module',
-                    'module' => $this->name
+                    'module' => 'psmod'
                 )
             )
         );
+    }
+
+    // Initialize Tools in dispatcher
+    public function hookActionDispatcher()
+    {
+        require_once(_PS_ROOT_DIR_.'/classes/Tools.php');
     }
 
     // ADD JS & CSS TO ADMIN
@@ -109,6 +117,21 @@ class PsMod extends Module
 
         $data = new stdClass();
         $data->PSMOD_DUMMY_CONF = Configuration::get('PSMOD_DUMMY_CONF');
+
+        // Add example URLs
+        $shopUrl = Context::getContext()->shop->getBaseURL(true);
+        $data->example_urls = array(
+            array(
+                'name' => 'Example API',
+                'url' => $shopUrl . 'example/api',
+                'description' => 'Example API endpoint that returns a JSON response. Useful as a base for implementing custom APIs.'
+            ),
+            array(
+                'name' => 'Example Page',
+                'url' => $shopUrl . 'example/page',
+                'description' => 'Example page showing how to implement a view with Smarty template. Useful as a base for creating front-office pages.'
+            )
+        );
 
         // Render template
         $this->context->smarty->assign('data', $data);

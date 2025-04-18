@@ -28,20 +28,27 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class PsModTest2ModuleFrontController extends ModuleFrontController
+class PsModExampleApiModuleFrontController extends ModuleFrontController
 {
     public $display_column_left = false;
     public $display_column_right = false;
-
     public function initContent()
     {
         parent::initContent();
-        $this->ajax = false;
+        $this->ajax = true;
+    }
 
-        // Set the content to be displayed
-        $this->context->smarty->assign('content', 'CONTENT');
+    public function displayAjax()
+    {
+        header('Content-Type: application/json');
 
-        // Render the template
-        $this->setTemplate('module:psmod/views/templates/front/test2.tpl');
+        // PREPARE OUTPUT
+        $out = new stdClass();
+        $out->status = 'OK';
+        $out->result = null;
+        $out->errors = [];
+
+        // SHOW OUTPUT
+        echo json_encode($out);
     }
 }

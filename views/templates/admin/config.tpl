@@ -25,14 +25,40 @@
 
 <form method="post">
     <div class="panel">
-        <h3>Dummy</h3>
+        <h3>Configuration</h3>
         <div>
             <label>Dummy</label>
             <input type="text" class="form-control" name="PSMOD_DUMMY_CONF" value="{$data->PSMOD_DUMMY_CONF}">
         </div>
         <hr>
         <div class="text-right">
-            <button type="submit" name="submit" class="btn btn-primary">Guardar</button>
+            <button type="submit" name="submit" class="btn btn-primary">Save</button>
         </div>
     </div>
 </form>
+
+<div class="panel">
+    <h3><i class="icon-code"></i> Example URLs</h3>
+    <p class="help-block">This module includes two implementation examples that you can use as a base for your developments:</p>
+    
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>URL</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {foreach from=$data->example_urls item=url}
+                    <tr>
+                        <td><strong>{$url.name}</strong></td>
+                        <td><a href="{$url.url}" target="_blank">{$url.url}</a></td>
+                        <td>{$url.description}</td>
+                    </tr>
+                {/foreach}
+            </tbody>
+        </table>
+    </div>
+</div>
