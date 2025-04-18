@@ -1,7 +1,7 @@
 # PrestaShop Module
 
 ## Description
-This is a generic PrestaShop module developed by KaisarCode. It is designed to be compatible with PrestaShop versions 1.7 and 8.x. The module provides a basic structure for developers to extend and customize according to their needs.
+This is a generic PrestaShop module. It is designed to be compatible with PrestaShop versions 1.7 and 8.x. The module provides a basic structure for developers to extend and customize according to their needs.
 
 ## Features
 - Fully compatible with PrestaShop 1.7 and 8.x.
