@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
-    <name>psmod</name>
+    <name><![CDATA[psmod]]></name>
     <displayName><![CDATA[PrestaShop Module]]></displayName>
-    <version><![CDATA[1.0.0]]></version>
+    <version><![CDATA[1.1.0]]></version>
     <description><![CDATA[Generic PrestaShop module.]]></description>
     <author><![CDATA[KaisarCode]]></author>
     <tab><![CDATA[others]]></tab>

@@ -44,7 +44,7 @@ class PsMod extends Module
     {
         $this->name = 'psmod';
         $this->tab = 'others';
-        $this->version = '1.0.0';
+        $this->version = '1.1.0';
         $this->author = 'KaisarCode';
         $this->bootstrap = true;
         $this->need_instance = true;
