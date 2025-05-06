@@ -27,9 +27,9 @@ To rename this module from 'PSMod' to your desired name, follow these steps:
    - Rename the main module folder from `psmod` to your desired name (e.g., `mymodule`)
    - Rename these files:
      - `psmod.php` to `mymodule.php`
-     - `classes/PsModDummy.php` to `classes/MyModuleDummy.php`
      - `controllers/admin/AdminPsModConfiguration.php` to `controllers/admin/AdminMyModuleConfiguration.php`
-     - `src/PsModTools.php` to `src/MyModuleTools.php`
+     - `classes/PsModExampleModelClass.php` to `classes/MyModuleExampleModelClass.php`
+     - `src/PsModExampleClass.php` to `src/MyModuleExampleClass.php`
 
 2. **Update File Contents**:
    - In `composer.json`:
@@ -42,7 +42,7 @@ To rename this module from 'PSMod' to your desired name, follow these steps:
      - Update configuration keys from `PSMOD_` to `MYMODULE_`
 
    - In class files:
-     - Update class names (e.g., `PsModDummy` to `MyModuleDummy`)
+     - Update class names (e.g., `PsModExampleModelClass` to `MyModuleExampleModelClass`)
      - Update database table names and prefixes in SQL files
      - Update namespaces and class references
 
