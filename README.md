@@ -35,17 +35,17 @@ To rename this module from 'PSMod' to your desired name, follow these steps:
    - In `composer.json`:
      - Change `"name": "kaisarcode/psmod"` to `"kaisarcode/mymodule"`
      - Update namespace from `"KaisarCode\\PsMod\\"` to `"KaisarCode\\MyModule\\"`
-   
+
    - In your renamed main module file:
      - Change the class name from `PsMod` to `MyModule`
      - Update `$this->name = 'psmod'` to `$this->name = 'mymodule'`
      - Update configuration keys from `PSMOD_` to `MYMODULE_`
-   
+
    - In class files:
      - Update class names (e.g., `PsModDummy` to `MyModuleDummy`)
      - Update database table names and prefixes in SQL files
      - Update namespaces and class references
-   
+
    - In config files:
      - Update module name in `config.xml` and `config_es.xml`
      - Update paths in controllers and templates
@@ -86,8 +86,9 @@ composer dump-autoload
 3. Search for `PrestaShop Module` and click `Uninstall`.
 4. Optionally, delete the module folder from the `modules` directory.
 
-## Support
-For any issues or questions, please contact KaisarCode at `support@kaisarcode.com`.
-
 ## License
 This module is licensed under the Academic Free License (AFL 3.0).
+
+## Author
+- KaisarCode <kaisar@kaisarcode.com>
+- Website: https://kaisarcode.com
